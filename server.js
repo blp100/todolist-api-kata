@@ -33,6 +33,15 @@ const server = http.createServer((req, res) => {
   } else if (url === "/todos" && method === "DELETE") {
     todos.length = 0;
     successHandler(res, todos);
+  } else if (url.startsWith("/todos/") && method === "DELETE") {
+    const todoId = url.split("/").pop();
+    const indexOfTodoId = todos.findIndex((element) => element.id === todoId);
+    if (indexOfTodoId !== -1) {
+      todos.splice(indexOfTodoId, 1);
+      successHandler(res, todos);
+    } else {
+      errorHandler(res, 400, "ID not recognized or not found");
+    }
   } else if (method === "OPTIONS") {
     successHandler(res, todos, true);
   } else {
@@ -41,7 +50,6 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT);
-
 
 // - DELETE: delete a todo
 // - PATCH: edit todo
