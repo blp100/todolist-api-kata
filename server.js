@@ -30,6 +30,9 @@ const server = http.createServer((req, res) => {
         errorHandler(res, 400, er.message);
       }
     });
+  } else if (url === "/todos" && method === "DELETE") {
+    todos.length = 0;
+    successHandler(res, todos);
   } else if (method === "OPTIONS") {
     successHandler(res, todos, true);
   } else {
@@ -39,7 +42,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT);
 
-// - POST: add a to-do
+
 // - DELETE: delete a todo
 // - PATCH: edit todo
 // - push on github
