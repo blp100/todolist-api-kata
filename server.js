@@ -34,7 +34,6 @@ const server = http.createServer((req, res) => {
 server.listen(PORT);
 
 
-// - OPTIONS: Setting up CORS - Preflight Options API
 // - GET: to-do lists
 // - POST: add a to-do
 // - DELETE: delete a todo
