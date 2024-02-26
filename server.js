@@ -42,6 +42,23 @@ const server = http.createServer((req, res) => {
     } else {
       errorHandler(res, 400, "ID not recognized or not found");
     }
+  } else if (url.startsWith("/todos/") && method === "PATCH") {
+    const todoId = url.split("/").pop();
+    const indexOfTodoId = todos.findIndex((element) => element.id === todoId);
+    req.on("end", () => {
+      try {
+        const data = JSON.parse(body);
+        const title = data.title;
+        if (indexOfTodoId !== -1 && title !== undefined) {
+          todos[indexOfTodoId].title = title;
+          successHandler(res, todos);
+        } else {
+          errorHandler(res, 400, "ID not recognized or not found");
+        }
+      } catch (er) {
+        errorHandler(res, 400, er.message);
+      }
+    });
   } else if (method === "OPTIONS") {
     successHandler(res, todos, true);
   } else {
