@@ -1,6 +1,7 @@
 import http from "http";
 import { v4 as uuidv4 } from "uuid";
 import { PORT, HEADERS } from "./constants.js";
+import { errorHandler, successHandler } from "./handler.js";
 
 const todos = [{ title: "Programming Day!", id: uuidv4() }];
 
@@ -13,14 +14,7 @@ const server = http.createServer((req, res) => {
   });
 
   if (url === "/todos" && method === "GET") {
-    res.writeHead(200, HEADERS);
-    res.write(
-      JSON.stringify({
-        status: "success",
-        data: todos,
-      })
-    );
-    res.end();
+    successHandler(res, todos);
   } else if (url === "/todos" && method === "POST") {
     req.on("end", () => {
       try {
@@ -28,48 +22,18 @@ const server = http.createServer((req, res) => {
         const title = data.title;
         if (title !== undefined) {
           todos.push({ title: title, id: uuidv4() });
-          res.writeHead(200, HEADERS);
-          res.write(
-            JSON.stringify({
-              status: "success",
-              data: todos,
-            })
-          );
-          res.end();
+          successHandler(res, todos);
         } else {
-          res.writeHead(400, HEADERS);
-          res.write(
-            JSON.stringify({
-              status: "failed",
-              data: "Column not recognized",
-            })
-          );
-          res.end();
+          errorHandler(res, 400, "Column not recognized");
         }
       } catch (er) {
-        // uh oh! bad json!
-        res.writeHead(400, HEADERS);
-        res.write(
-          JSON.stringify({
-            status: "failed",
-            message: er.message,
-          })
-        );
-        res.end();
+        errorHandler(res, 400, er.message);
       }
     });
   } else if (method === "OPTIONS") {
-    res.writeHead(200, HEADERS);
-    res.end();
+    successHandler(res, todos, true);
   } else {
-    res.writeHead(404, HEADERS);
-    res.write(
-      JSON.stringify({
-        status: "failed",
-        message: "no router instance found",
-      })
-    );
-    res.end();
+    errorHandler(res, 404, "no router instance found");
   }
 });
 
