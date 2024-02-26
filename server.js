@@ -16,6 +16,9 @@ const server = http.createServer((req, res) => {
       })
     );
     res.end();
+  } else if (method === "OPTIONS") {
+    res.writeHead(200, HEADERS);
+    res.end()
   } else {
     res.writeHead(404, HEADERS);
     res.write(
@@ -30,7 +33,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT);
 
-// - Deal with 404
+
 // - OPTIONS: Setting up CORS - Preflight Options API
 // - GET: to-do lists
 // - POST: add a to-do
