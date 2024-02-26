@@ -1,15 +1,35 @@
 import http from "http";
-import { PORT } from "./constants.js";
+import { v4 as uuidv4 } from "uuid";
+import { PORT, HEADERS } from "./constants.js";
+
+const todos = [{ title: "Programming Day!", id: uuidv4() }];
 
 const server = http.createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.write("Hello");
-  res.end();
+  const { url, method } = req;
+
+  if (url === "/todos" && method === "GET") {
+    res.writeHead(200, HEADERS);
+    res.write(
+      JSON.stringify({
+        status: "success",
+        message: todos,
+      })
+    );
+    res.end();
+  } else {
+    res.writeHead(404, HEADERS);
+    res.write(
+      JSON.stringify({
+        status: "failed",
+        message: "no router instance found",
+      })
+    );
+    res.end();
+  }
 });
 
 server.listen(PORT);
 
-// - Create Server
 // - Deal with 404
 // - OPTIONS: Setting up CORS - Preflight Options API
 // - GET: to-do lists
