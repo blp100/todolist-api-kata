@@ -67,9 +67,3 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT);
-
-// - DELETE: delete a todo
-// - PATCH: edit todo
-// - push on github
-// - deploy to render
-// - test on postman
